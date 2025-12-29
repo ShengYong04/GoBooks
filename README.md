@@ -18,12 +18,6 @@ A simple, responsive e-commerce bookstore built with **ASP.NET MVC 5** and **Ent
 * **Database:** MS SQL Server & Entity Framework 6
 * **Frontend:** Bootstrap 5, jQuery, FontAwesome
 
-## 📸 Screenshots
-
-| Shopping Cart | Guest Lock Screen |
-|:---:|:---:|
-| ![Cart](image_56c90d.jpg) | ![Guest Lock](image_54ef5c.png) |
-
 ## 💻 How to Run
 
 1.  **Clone the repo:**
