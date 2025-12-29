@@ -15,17 +15,3 @@ A simple, responsive e-commerce bookstore built with **ASP.NET MVC 5** and **Ent
 * **Framework:** ASP.NET MVC 5 (.NET Framework)
 * **Database:** MS SQL Server & Entity Framework 6
 * **Frontend:** Bootstrap 5, jQuery, FontAwesome
-
-## 💻 How to Run
-
-1.  **Clone the repo:**
-    ```bash
-    git clone [https://github.com/ShengYong04/GoBooks.git](https://github.com/ShengYong04/GoBooks.git)
-    ```
-2.  **Setup Database:**
-    Open Visual Studio's **Package Manager Console** and run:
-    ```powershell
-    Update-Database
-    ```
-3.  **Run:**
-    Press **F5** in Visual Studio to start the application.
