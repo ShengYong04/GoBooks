@@ -1,0 +1,118 @@
+﻿@model MVCBookStore.Models.Order
+
+@{
+    ViewBag.Title = "Manage Order #" + Model.OrderId;
+    // Use Admin Layout
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var deliveryAddress = Model.Payments.FirstOrDefault()?.BillingAddress ?? "N/A";
+    var addressParts = deliveryAddress.Split('|');
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mb-4 shadow-sm" role="alert">
+        <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 text-gray-800">Manage Order #@Model.OrderId</h1>
+    <a href="@Url.Action("Index", "Order")" class="btn btn-secondary btn-sm shadow-sm">
+        <i class="fas fa-arrow-left fa-sm text-white-50 mr-1"></i> Back to Orders
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Ordered Items</h6>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Book Title</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th class="text-end pe-4">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderItems)
+                        {
+                            <tr>
+                                <td class="ps-4">
+                                    <strong>@item.Book.Title</strong><br />
+                                    <small class="text-muted">ISBN: @item.Book.ISBN</small>
+                                </td>
+                                <td>@item.PriceAtPurchase.ToString("C")</td>
+                                <td>x @item.Quantity</td>
+                                <td class="text-end pe-4">@((item.PriceAtPurchase * item.Quantity).ToString("C"))</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr class="fw-bold bg-light">
+                            <td colspan="3" class="text-end">Total Amount:</td>
+                            <td class="text-end pe-4 text-success fs-5">@Model.TotalAmount.ToString("C")</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 bg-primary text-white">
+                <h6 class="m-0 font-weight-bold">Update Status</h6>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm("UpdateStatus", "Order", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="orderId" value="@Model.OrderId" />
+
+                    <div class="mb-3">
+                        <label class="small font-weight-bold text-muted">Current Status: @Model.Status</label>
+                        <select name="status" class="form-select">
+                            <option value="Processing" @(Model.Status == "Processing" ? "selected" : "")>Processing</option>
+                            <option value="Shipped" @(Model.Status == "Shipped" ? "selected" : "")>Shipped</option>
+                            <option value="Completed" @(Model.Status == "Completed" ? "selected" : "")>Completed</option>
+                            <option value="Cancelled" @(Model.Status == "Cancelled" ? "selected" : "")>Cancelled</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary w-100" type="submit">Update Status</button>
+                }
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Customer Details</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="small text-gray-500 text-uppercase font-weight-bold">Customer</div>
+                    <div>@Model.User.FullName</div>
+                    <div><a href="mailto:@Model.User.Email">@Model.User.Email</a></div>
+                    <div>@Model.User.PhoneNumber</div>
+                </div>
+                <hr>
+                <div>
+                    <div class="small text-gray-500 text-uppercase font-weight-bold mb-1">Shipping Address (COD)</div>
+                    @foreach (var part in addressParts)
+                    {
+                        if (!string.IsNullOrWhiteSpace(part))
+                        {
+                            <div>@part</div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

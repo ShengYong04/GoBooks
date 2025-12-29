@@ -1,0 +1,195 @@
+﻿@model MVCBookStore.ViewModels.UserProfileViewModel
+
+@{
+    ViewBag.Title = "My Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var states = new List<SelectListItem>
+{
+        new SelectListItem { Text = "Johor", Value = "Johor" },
+        new SelectListItem { Text = "Kedah", Value = "Kedah" },
+        new SelectListItem { Text = "Kelantan", Value = "Kelantan" },
+        new SelectListItem { Text = "Melaka", Value = "Melaka" },
+        new SelectListItem { Text = "Negeri Sembilan", Value = "Negeri Sembilan" },
+        new SelectListItem { Text = "Pahang", Value = "Pahang" },
+        new SelectListItem { Text = "Perak", Value = "Perak" },
+        new SelectListItem { Text = "Perlis", Value = "Perlis" },
+        new SelectListItem { Text = "Pulau Pinang", Value = "Pulau Pinang" },
+        new SelectListItem { Text = "Sabah", Value = "Sabah" },
+        new SelectListItem { Text = "Sarawak", Value = "Sarawak" },
+        new SelectListItem { Text = "Selangor", Value = "Selangor" },
+        new SelectListItem { Text = "Terengganu", Value = "Terengganu" },
+        new SelectListItem { Text = "Kuala Lumpur", Value = "Kuala Lumpur" },
+        new SelectListItem { Text = "Putrajaya", Value = "Putrajaya" },
+        new SelectListItem { Text = "Labuan", Value = "Labuan" }
+    };
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark">My Account</h2>
+        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+        {
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-4 fw-bold">Sign Out</button>
+        }
+    </div>
+
+    <div class="row g-5">
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3">
+                    <h5 class="m-0 fw-bold"><i class="fas fa-user-cog me-2 text-primary"></i> Settings</h5>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.SuccessMessage != null)
+                    {
+                        <div class="alert alert-success small">@ViewBag.SuccessMessage</div>
+                    }
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Email, new { @class = "form-label text-muted small fw-bold" })
+                            <input type="text" class="form-control bg-light text-dark" value="@Model.Email" readonly />
+                            @Html.HiddenFor(m => m.Email)
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.FullName, new { @class = "form-label fw-bold" })
+                            @Html.EditorFor(m => m.FullName, new { htmlAttributes = new { @class = "form-control text-dark" } })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.PhoneNumber, new { @class = "form-label fw-bold" })
+                            @Html.EditorFor(m => m.PhoneNumber, new { htmlAttributes = new { @class = "form-control text-dark" } })
+                        </div>
+
+                        <hr class="my-4" />
+                        <h6 class="fw-bold text-muted mb-3"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Delivery Address</h6>
+
+                        <div class="mb-2">
+                            @Html.LabelFor(m => m.AddressLine1, new { @class = "form-label small text-muted" })
+                            @Html.TextBoxFor(m => m.AddressLine1, new { @class = "form-control text-dark", placeholder = "Unit No, Street Name" })
+                            @Html.ValidationMessageFor(m => m.AddressLine1, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-2">
+                            @Html.LabelFor(m => m.AddressLine2, new { @class = "form-label small text-muted" })
+                            @Html.TextBoxFor(m => m.AddressLine2, new { @class = "form-control text-dark", placeholder = "Apartment (Optional)" })
+                        </div>
+
+                        <div class="row g-2 mb-2">
+                            <div class="col-5">
+                                @Html.LabelFor(m => m.PostalCode, new { @class = "form-label small text-muted" })
+                                @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control text-dark", placeholder = "50450" })
+                                @Html.ValidationMessageFor(m => m.PostalCode, "", new { @class = "text-danger small" })
+                            </div>
+                            <div class="col-7">
+                                @Html.LabelFor(m => m.City, new { @class = "form-label small text-muted" })
+                                @Html.TextBoxFor(m => m.City, new { @class = "form-control text-dark", placeholder = "City" })
+                                @Html.ValidationMessageFor(m => m.City, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            @Html.LabelFor(m => m.State, new { @class = "form-label small text-muted" })
+                            @Html.DropDownListFor(m => m.State, states, "Select State", new { @class = "form-select text-dark" })
+                            @Html.ValidationMessageFor(m => m.State, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 fw-bold shadow-sm">Save Changes</button>
+                    }
+
+                    <hr class="my-4" />
+                    <a href="@Url.Action("ChangePassword")" class="text-decoration-none small text-primary fw-bold">
+                        <i class="fas fa-key me-1"></i> Change Password
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="m-0 fw-bold"><i class="fas fa-box-open me-2 text-primary"></i> Order History</h5>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.OrderHistory == null || !Model.OrderHistory.Any())
+                    {
+                        <div class="text-center py-5 text-muted">
+                            <i class="fas fa-shopping-bag fa-3x mb-3 opacity-25"></i>
+                            <p>You haven't placed any orders yet.</p>
+                            <a href="@Url.Action("Index", "Home")" class="btn btn-sm btn-outline-primary">Browse Books</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0 align-middle">
+                                <thead class="bg-light text-secondary small text-uppercase">
+                                    <tr>
+                                        <th class="ps-4">Order ID</th>
+                                        <th>Date</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Items</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in Model.OrderHistory)
+                                    {
+                                        <tr>
+                                            <td class="ps-4 fw-bold text-dark">#@order.OrderId</td>
+                                            <td class="text-muted small">@order.OrderDate.ToString("dd MMM yyyy")</td>
+                                            <td class="fw-bold text-dark">RM @order.TotalAmount.ToString("F2")</td>
+
+                                            <td>
+                                                @if (order.Status == "Pending")
+                                                {
+                                                    <span class="badge bg-warning text-dark px-3 rounded-pill">Pending</span>
+                                                }
+                                                else if (order.Status == "Processing")
+                                                {
+                                                    <span class="badge bg-primary px-3 rounded-pill">Processing</span>
+                                                }
+                                                else if (order.Status == "Shipped")
+                                                {
+                                                    <span class="badge bg-info text-white px-3 rounded-pill">Shipped</span>
+                                                }
+                                                else if (order.Status == "Completed")
+                                                {
+                                                    <span class="badge bg-success px-3 rounded-pill">Completed</span>
+                                                }
+                                                else if (order.Status == "Cancelled")
+                                                {
+                                                    <span class="badge bg-danger px-3 rounded-pill">Cancelled</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary px-3 rounded-pill">@order.Status</span>
+                                                }
+                                            </td>
+
+                                            <td class="small text-muted">
+                                                @order.OrderItems.Count book(s)
+                                                <br />
+                                                <a href="@Url.Action("OrderDetails", "Manage", new { orderId = order.OrderId })" class="btn btn-sm btn-outline-primary mt-1" style="font-size: 0.75rem;">
+                                                    View Details
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,94 @@
+﻿@model MVCBookStore.Models.Genre
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Edit Genre";
+}
+
+<style>
+    .card-header {
+        background-color: #fff;
+        border-bottom: 1px solid #eee;
+        font-weight: 700;
+        color: #4a5568;
+        padding: 15px 20px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #4a5568;
+        margin-bottom: 8px;
+    }
+
+    .form-control, .form-select {
+        padding: 10px 15px;
+        border-radius: 6px;
+        border: 1px solid #e2e8f0;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #4e73df;
+            box-shadow: 0 0 0 3px rgba(78, 115, 223, 0.1);
+        }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="h3 mb-0 text-gray-800 fw-bold">Edit Genre</h2>
+        <p class="text-muted small mb-0">Modify category details.</p>
+    </div>
+    <a href="@Url.Action("Index")" class="btn btn-outline-secondary btn-sm">
+        <i class="fas fa-arrow-left me-1"></i> Back to List
+    </a>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.GenreId)
+    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    Genre Details
+                </div>
+                <div class="card-body">
+
+                    <div class="mb-4">
+                        @Html.LabelFor(model => model.GenreName, "Genre Name", new { @class = "form-label" })
+                        @Html.EditorFor(model => model.GenreName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.GenreName, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(model => model.IsActive, "Status", new { @class = "form-label" })
+                        @Html.DropDownListFor(model => model.IsActive,
+                            new List<SelectListItem>
+                            {
+                                new SelectListItem { Text = "Active", Value = "true", Selected = Model.IsActive },
+                                new SelectListItem { Text = "Inactive", Value = "false", Selected = !Model.IsActive }
+                            },
+                            new { @class = "form-select" })
+                        @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger small" })
+                        <div class="form-text text-muted">Inactive genres will be hidden from the store menu.</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-save me-2"></i> Save Changes
+                </button>
+                <a href="@Url.Action("Index")" class="btn btn-light border">Cancel</a>
+            </div>
+
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

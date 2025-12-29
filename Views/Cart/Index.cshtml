@@ -1,0 +1,198 @@
+﻿@model MVCBookStore.Models.Cart
+
+@{
+    ViewBag.Title = "Shopping Cart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    decimal cartTotal = Model?.CartItems.Sum(i => i.Book.Price * i.Quantity) ?? 0;
+    int itemCount = Model?.CartItems.Sum(i => i.Quantity) ?? 0;
+}
+
+<div class="container py-5" id="full-cart-container">
+    <h2 class="mb-4 fw-bold text-dark">Shopping Cart <span class="text-muted fs-4">(@itemCount items)</span></h2>
+
+    @if (Model == null || !Model.CartItems.Any())
+    {
+        <div class="text-center py-5 bg-white shadow-sm rounded-3">
+            <i class="fas fa-shopping-cart fa-4x text-primary mb-3 opacity-50"></i>
+            <h3 class="fw-bold">Your cart is currently empty.</h3>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-lg rounded-pill px-5 mt-3 shadow-sm">Start Shopping</a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="ps-4 py-3 text-secondary text-uppercase small" style="width: 45%;">Product</th>
+                                        <th class="py-3 text-secondary text-uppercase small">Price</th>
+                                        <th class="py-3 text-secondary text-uppercase small">Quantity</th>
+                                        <th class="py-3 text-end pe-4 text-secondary text-uppercase small">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.CartItems)
+                                    {
+                                        <tr>
+                                            <td class="ps-4 py-4">
+                                                <div class="d-flex align-items-center">
+                                                    <a href="@Url.Action("Details", "Home", new { id = item.BookId })">
+                                                        <img src="@Url.Content(item.Book.ImageUrl)"
+                                                             style="width: 70px; height: 100px; object-fit: cover; border-radius: 6px;"
+                                                             onerror="this.src='/Content/Images/default.png'" />
+                                                    </a>
+                                                    <div class="ms-3">
+                                                        <h6 class="mb-1">
+                                                            <a href="@Url.Action("Details", "Home", new { id = item.BookId })" class="text-decoration-none text-dark fw-bold">@item.Book.Title</a>
+                                                        </h6>
+                                                        <small class="text-muted d-block">by @item.Book.Author</small>
+
+                                                        <!-- Stock left -->
+                                                        <div class="text-muted small mt-1">
+                                                            Stock left: @item.Book.Quantity
+                                                        </div>
+
+                                                        <!-- Warning if reached max -->
+                                                        @if (item.Quantity >= item.Book.Quantity)
+                                                        {
+                                                            <div class="text-danger small mt-1">
+                                                                Maximum stock reached!
+                                                            </div>
+                                                        }
+
+                                                        <div class="mt-2">
+                                                            <button class="btn btn-link p-0 text-danger text-decoration-none small js-cart-page-remove"
+                                                                    data-id="@item.CartItemId">
+                                                                <i class="fas fa-trash-alt me-1"></i> Remove
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <td class="fw-bold text-dark">RM @item.Book.Price.ToString("F2")</td>
+
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="input-group input-group-sm" style="width: 110px;">
+                                                        <button class="btn btn-outline-secondary js-cart-page-update"
+                                                                data-id="@item.CartItemId" data-count="-1">
+                                                            <i class="fas fa-minus small"></i>
+                                                        </button>
+                                                        <input type="text" class="form-control text-center bg-white" value="@item.Quantity" readonly />
+                                                        <button class="btn btn-outline-secondary js-cart-page-update"
+                                                                data-id="@item.CartItemId" data-count="1">
+                                                            <i class="fas fa-plus small"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <td class="text-end fw-bold pe-4 text-primary">
+                                                RM @((item.Book.Price * item.Quantity).ToString("F2"))
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary fw-bold">
+                        <i class="fas fa-arrow-left me-2"></i> Continue Shopping
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 bg-white">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-4">Order Summary</h5>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Subtotal</span>
+                            <span class="fw-bold">RM @cartTotal.ToString("F2")</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="text-muted">Shipping</span>
+                            <span class="text-success fw-bold">Free</span>
+                        </div>
+
+                        <hr class="my-3" />
+
+                        <div class="d-flex justify-content-between mb-4 align-items-center">
+                            <span class="fs-5 fw-bold text-dark">Total</span>
+                            <span class="fs-4 fw-bold text-primary">RM @cartTotal.ToString("F2")</span>
+                        </div>
+
+                        <div class="d-grid">
+                            <a href="@Url.Action("Checkout", "Order")" class="btn btn-primary btn-lg shadow-sm fw-bold">
+                                Proceed to Checkout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            $(document).on('click', '.js-cart-page-update', function (e) {
+                e.preventDefault();
+                var btn = $(this);
+                var id = btn.data('id');
+                var count = btn.data('count');
+                var input = btn.closest('tr').find('input');
+                var currentQty = parseInt(input.val());
+                var stockText = btn.closest('tr').find('.text-muted:contains("Stock left")').text();
+                var maxStock = parseInt(stockText.replace('Stock left:', '').trim());
+
+                if (count > 0 && currentQty >= maxStock) {
+                    alert("You have reached the maximum stock for this product!");
+                    return;
+                }
+
+                btn.prop('disabled', true);
+
+                updateCartPage('@Url.Action("UpdateQuantity", "Cart")', { cartItemId: id, count: count });
+            });
+
+            $(document).on('click', '.js-cart-page-remove', function (e) {
+                e.preventDefault();
+                if (!confirm("Are you sure you want to remove this item?")) return;
+
+                var id = $(this).data('id');
+                updateCartPage('@Url.Action("RemoveFromCart", "Cart")', { cartItemId: id });
+            });
+
+            function updateCartPage(url, data) {
+                data.__RequestVerificationToken = token;
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: data,
+                    success: function (result) {
+                        location.reload();
+                    },
+                    error: function () {
+                        alert("Error updating cart. Please try again.");
+                        $('.js-cart-page-update').prop('disabled', false);
+                    }
+                });
+            }
+        });
+    </script>
+}

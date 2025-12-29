@@ -1,0 +1,126 @@
+﻿@model MVCBookStore.Models.Cart
+
+@{
+    int totalCount = Model?.CartItems.Sum(i => i.Quantity) ?? 0;
+}
+
+<div id="cart-content-wrapper" style="height: 100vh; display: flex; flex-direction: column;">
+
+    <input type="hidden" id="hidden-cart-count" value="@totalCount" />
+
+    <div class="offcanvas-header border-bottom bg-white" style="flex-shrink: 0;">
+        <h5 class="offcanvas-title fw-bold text-dark" id="cartLabel">
+            <i class="fas fa-shopping-bag me-2 text-primary"></i> Your Cart
+            <span class="badge bg-primary rounded-pill ms-1" style="font-size: 0.8rem; vertical-align: middle;">
+                @totalCount
+            </span>
+        </h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+
+    <div class="offcanvas-body p-0" style="flex-grow: 1; overflow-y: auto; background-color: #f8f9fc;">
+        @if (Model == null || !Model.CartItems.Any())
+        {
+            <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted">
+                <div class="bg-white p-4 rounded-circle shadow-sm mb-3">
+                    <i class="fas fa-shopping-basket fa-3x text-primary opacity-50"></i>
+                </div>
+                <p class="fw-bold">Your cart is currently empty.</p>
+                <button class="btn btn-primary rounded-pill px-4 shadow-sm" data-bs-dismiss="offcanvas">Start Shopping</button>
+            </div>
+        }
+        else
+        {
+            <ul class="list-group list-group-flush">
+                @foreach (var item in Model.CartItems)
+                {
+                    <li class="list-group-item py-3 border-bottom bg-white">
+                        <div class="d-flex align-items-center">
+
+                            <div class="flex-shrink-0 me-3">
+                                <img src="@Url.Content(item.Book.ImageUrl)"
+                                     style="width: 60px; height: 85px; object-fit: cover; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);"
+                                     onerror="this.src='/Content/Images/default.png'" />
+                            </div>
+
+                            <div class="flex-grow-1" style="min-width: 0;">
+                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                    <h6 class="mb-0 text-truncate fw-bold text-dark" style="max-width: 140px;" title="@item.Book.Title">
+                                        @item.Book.Title
+                                    </h6>
+                                    <span class="fw-bold text-primary">
+                                        RM @((item.Book.Price * item.Quantity).ToString("F2"))
+                                    </span>
+                                </div>
+
+                                <div class="text-muted small mb-1">
+                                    Unit: RM @item.Book.Price.ToString("F2")
+                                </div>
+
+                                <!-- Display stock left -->
+                                <div class="text-muted small mb-2">
+                                    Stock left: @item.Book.Quantity
+                                </div>
+
+                                <!-- Optional: Warning if quantity = stock -->
+                                @if (item.Quantity >= item.Book.Quantity)
+                                {
+                                    <div class="text-danger small mb-2">
+                                        Maximum stock reached!
+                                    </div>
+                                }
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="input-group input-group-sm flex-nowrap" style="width: 100px;">
+                                        <button class="btn btn-outline-secondary js-cart-update border-end-0"
+                                                type="button" data-id="@item.CartItemId" data-count="-1">
+                                            <i class="fas fa-minus small"></i>
+                                        </button>
+
+                                        <input type="text" class="form-control text-center border-secondary bg-white px-0 fw-bold text-dark"
+                                               style="max-width: 40px; border-left: 0; border-right: 0;"
+                                               value="@item.Quantity" readonly />
+
+                                        <button class="btn btn-outline-secondary js-cart-update border-start-0"
+                                                type="button" data-id="@item.CartItemId" data-count="1">
+                                            <i class="fas fa-plus small"></i>
+                                        </button>
+                                    </div>
+
+                                    <a href="javascript:void(0);"
+                                       class="text-danger text-decoration-none small js-cart-remove ms-3"
+                                       data-id="@item.CartItemId" title="Remove">
+                                        <i class="far fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ul>
+            <div style="height: 20px;"></div>
+        }
+    </div>
+
+    @if (Model != null && Model.CartItems.Any())
+    {
+        <div class="offcanvas-footer p-3 border-top bg-white shadow-lg" style="flex-shrink: 0; z-index: 10;">
+            <div class="d-flex justify-content-between mb-3 align-items-center">
+                <span class="fw-bold text-secondary text-uppercase small ls-1">Subtotal</span>
+                <span class="fw-bold text-primary fs-4">
+                    RM @Model.CartItems.Sum(i => i.Book.Price * i.Quantity).ToString("F2")
+                </span>
+            </div>
+
+            <div class="d-grid gap-2">
+                <a href="@Url.Action("Index", "Cart")" class="btn btn-outline-primary fw-bold d-flex justify-content-center align-items-center">
+                    <i class="fas fa-shopping-cart me-2"></i> View Full Cart
+                </a>
+
+                <a href="@Url.Action("Checkout", "Order")" class="btn btn-primary btn-lg shadow-sm fw-bold d-flex justify-content-center align-items-center">
+                    Checkout <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    }
+</div>

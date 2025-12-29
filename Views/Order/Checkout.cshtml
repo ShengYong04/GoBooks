@@ -1,0 +1,143 @@
+﻿@model MVCBookStore.ViewModels.CheckoutViewModel
+
+@{
+    ViewBag.Title = "Checkout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var cartItems = ViewBag.CartItems as List<MVCBookStore.Models.CartItem>;
+    decimal total = ViewBag.CartTotal;
+
+    var states = new List<SelectListItem>
+{
+        new SelectListItem { Text = "Johor", Value = "Johor" },
+        new SelectListItem { Text = "Kedah", Value = "Kedah" },
+        new SelectListItem { Text = "Kelantan", Value = "Kelantan" },
+        new SelectListItem { Text = "Melaka", Value = "Melaka" },
+        new SelectListItem { Text = "Negeri Sembilan", Value = "Negeri Sembilan" },
+        new SelectListItem { Text = "Pahang", Value = "Pahang" },
+        new SelectListItem { Text = "Perak", Value = "Perak" },
+        new SelectListItem { Text = "Perlis", Value = "Perlis" },
+        new SelectListItem { Text = "Pulau Pinang", Value = "Pulau Pinang" },
+        new SelectListItem { Text = "Sabah", Value = "Sabah" },
+        new SelectListItem { Text = "Sarawak", Value = "Sarawak" },
+        new SelectListItem { Text = "Selangor", Value = "Selangor" },
+        new SelectListItem { Text = "Terengganu", Value = "Terengganu" },
+        new SelectListItem { Text = "Kuala Lumpur", Value = "Kuala Lumpur" },
+    };
+}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">Checkout</h2>
+        <p class="text-muted">Complete your order details below.</p>
+    </div>
+
+    <div class="row g-5 justify-content-center">
+
+        <div class="col-lg-6">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="card shadow-sm mb-4 border-0">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="m-0 fw-bold"><i class="fas fa-map-marker-alt me-2 text-danger"></i> Delivery Address</h5>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.AddressLine1, new { @class = "form-label small text-muted" })
+                            @Html.TextBoxFor(m => m.AddressLine1, new { @class = "form-control text-dark", placeholder = "Unit No, Street Name" })
+                            @Html.ValidationMessageFor(m => m.AddressLine1, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.AddressLine2, new { @class = "form-label small text-muted" })
+                            @Html.TextBoxFor(m => m.AddressLine2, new { @class = "form-control text-dark", placeholder = "Apartment, Suite (Optional)" })
+                        </div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-5">
+                                @Html.LabelFor(m => m.PostalCode, new { @class = "form-label small text-muted" })
+                                @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control text-dark", placeholder = "50450" })
+                                @Html.ValidationMessageFor(m => m.PostalCode, "", new { @class = "text-danger small" })
+                            </div>
+                            <div class="col-7">
+                                @Html.LabelFor(m => m.City, new { @class = "form-label small text-muted" })
+                                @Html.TextBoxFor(m => m.City, new { @class = "form-control text-dark", placeholder = "City" })
+                                @Html.ValidationMessageFor(m => m.City, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.State, new { @class = "form-label small text-muted" })
+                            @Html.DropDownListFor(m => m.State, states, "Select State", new { @class = "form-select text-dark" })
+                            @Html.ValidationMessageFor(m => m.State, "", new { @class = "text-danger small" })
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mb-4 border-0">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="m-0 fw-bold"><i class="fas fa-wallet me-2 text-success"></i> Payment Method</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center p-3 border rounded bg-light">
+                            <i class="fas fa-money-bill-wave fa-2x text-success me-3"></i>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Cash on Delivery (COD)</h6>
+                                <small class="text-muted">Pay comfortably when your order arrives.</small>
+                            </div>
+                            <div class="ms-auto">
+                                <i class="fas fa-check-circle text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-dark btn-lg w-100 py-3 shadow-sm fw-bold">
+                    Place Order - @total.ToString("C")
+                </button>
+            }
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card shadow-sm bg-light border-0">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Order Summary</h5>
+                    <ul class="list-group list-group-flush mb-3 rounded border-0">
+                        @foreach (var item in cartItems)
+                        {
+                            <li class="list-group-item d-flex justify-content-between lh-sm bg-transparent px-0 border-bottom">
+                                <div class="pe-2">
+                                    <h6 class="my-0 small fw-bold">@item.Book.Title</h6>
+                                    <small class="text-muted">Qty: @item.Quantity</small>
+                                </div>
+                                <span class="text-muted small">@((item.Book.Price * item.Quantity).ToString("C"))</span>
+                            </li>
+                        }
+                    </ul>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal</span>
+                        <strong>@total.ToString("C")</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2 text-success">
+                        <span>Delivery</span>
+                        <strong>Free</strong>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between fw-bold fs-5">
+                        <span>Total To Pay</span>
+                        <span class="text-dark">@total.ToString("C")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

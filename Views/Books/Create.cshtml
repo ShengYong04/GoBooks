@@ -1,0 +1,204 @@
+﻿@model MVCBookStore.Models.Book
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Create Book";
+}
+
+<style>
+    .card-header {
+        background-color: #fff;
+        border-bottom: 1px solid #eee;
+        font-weight: 700;
+        color: #4a5568;
+        padding: 15px 20px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #4a5568;
+        margin-bottom: 8px;
+    }
+
+    .form-control, .form-select {
+        padding: 10px 15px;
+        border-radius: 6px;
+        border: 1px solid #e2e8f0;
+    }
+
+        .form-control:focus {
+            border-color: #4e73df;
+            box-shadow: 0 0 0 3px rgba(78, 115, 223, 0.1);
+        }
+
+    .dropzone-area {
+        border: 2px dashed #e2e8f0;
+        border-radius: 8px;
+        padding: 30px;
+        text-align: center;
+        background-color: #f8fafc;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+        .dropzone-area:hover {
+            background-color: #edf2f7;
+            border-color: #cbd5e0;
+        }
+
+    .img-preview-box {
+        max-height: 150px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="h3 mb-0 text-gray-800 fw-bold">Add New Book</h2>
+        <p class="text-muted small mb-0">Fill in the information below to create a new product.</p>
+    </div>
+    <a href="@Url.Action("Index")" class="btn btn-outline-secondary btn-sm">
+        <i class="fas fa-arrow-left me-1"></i> Back to List
+    </a>
+</div>
+
+@using (Html.BeginForm("Create", "Books", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+
+            <!-- General Information -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">General Information</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.Title, "Book Name", new { @class = "form-label" })
+                            @Html.EditorFor(m => m.Title, new { htmlAttributes = new { @class = "form-control", placeholder = "e.g. Harry Potter" } })
+                            @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger small" })
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.Author, "Author Name", new { @class = "form-label" })
+                            @Html.EditorFor(m => m.Author, new { htmlAttributes = new { @class = "form-control", placeholder = "e.g. J.K. Rowling" } })
+                            @Html.ValidationMessageFor(m => m.Author, "", new { @class = "text-danger small" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.ISBN, "ISBN", new { @class = "form-label" })
+                            @Html.EditorFor(m => m.ISBN, new { htmlAttributes = new { @class = "form-control", placeholder = "e.g. 9783161484100", pattern = "[0-9]{10,13}", title = "Only digits allowed (10-13 digits)" } })
+                            @Html.ValidationMessageFor(m => m.ISBN, "", new { @class = "text-danger small" })
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Description, "Description", new { @class = "form-label" })
+                        @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 5, placeholder = "Type book description here..." })
+                        @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger small" })
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing & Details -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">Pricing & Details</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.Price, "Base Price (RM)", new { @class = "form-label" })
+                            <div class="input-group">
+                                <span class="input-group-text">RM</span>
+                                @Html.EditorFor(m => m.Price, new { htmlAttributes = new { @class = "form-control", placeholder = "0.00" } })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Price, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.Quantity, "Quantity", new { @class = "form-label" })
+                            @Html.EditorFor(m => m.Quantity, new { htmlAttributes = new { @class = "form-control", placeholder = "e.g. 1" } })
+                            @Html.ValidationMessageFor(m => m.Quantity, "", new { @class = "text-danger small" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.GenreId, "Category (Genre)", new { @class = "form-label" })
+                            @Html.DropDownList("GenreId", null, "-- Select Genre --", new { @class = "form-select" })
+                            @Html.ValidationMessageFor(m => m.GenreId, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            @Html.Label("Product Status", new { @class = "form-label" })
+                            @Html.DropDownListFor(m => m.IsActive,
+                                new List<SelectListItem>
+                                {
+                                    new SelectListItem { Text = "Published", Value = "true", Selected = true },
+                                    new SelectListItem { Text = "Draft / Inactive", Value = "false" }
+                                },
+                                new { @class = "form-select" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Media -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">Media</div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <label class="form-label">Upload Cover Image</label>
+                            <div class="dropzone-area" onclick="document.getElementById('fileInput').click()">
+                                <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2"></i>
+                                <p class="mb-0 text-muted small">Click box to upload image</p>
+                                <input type="file" id="fileInput" name="upload" class="d-none" required onchange="previewImage(this)" />
+                            </div>
+                            @Html.ValidationMessageFor(m => m.ImageUrl, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="col-md-4 text-center">
+                            <div id="imagePreviewContainer" class="d-none mt-3 mt-md-0">
+                                <span class="badge bg-success mb-2">Preview</span><br />
+                                <img id="imagePreview" src="#" alt="Cover Preview" class="img-preview-box" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Buttons -->
+            <div class="d-flex justify-content-end gap-2 mb-5">
+                <a href="@Url.Action("Index")" class="btn btn-light border px-4">Cancel</a>
+                <button type="submit" class="btn btn-primary px-4 btn-lg">
+                    <i class="fas fa-check-circle me-2"></i> Publish Book
+                </button>
+            </div>
+
+        </div>
+    </div>
+}
+
+<script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var preview = document.getElementById('imagePreview');
+                var container = document.getElementById('imagePreviewContainer');
+                preview.src = e.target.result;
+                container.classList.remove('d-none');
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
