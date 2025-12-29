@@ -2,8 +2,6 @@
 
 A simple, responsive e-commerce bookstore built with **ASP.NET MVC 5** and **Entity Framework**. This project features a full shopping cart system with real-time stock management and user authentication.
 
-![Home Page](image_5564cd.jpg)
-
 ## 🚀 Key Features
 
 * [cite_start]**Shopping Cart:** Add/Remove items via AJAX without reloading the page[cite: 45].
