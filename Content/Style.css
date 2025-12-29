@@ -1,0 +1,273 @@
+﻿/* =========================================
+   BOOK DETAILS PAGE SPECIFIC STYLES
+   ========================================= */
+
+/* Container */
+.product-container {
+    padding: 2rem 0;
+}
+
+/* Image Section */
+.product-img-box {
+    background-color: var(--primary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.product-img {
+    max-width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.15));
+}
+
+/* Book Details Section */
+.product-genre {
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent-color); /* Theme accent color */
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+}
+
+.product-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+}
+
+.product-author {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+
+.product-price {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent-color);
+    margin-bottom: 1.5rem;
+}
+
+/* Description */
+.product-desc-label {
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 5px;
+    display: inline-block;
+}
+
+.product-desc-wrapper {
+    overflow: hidden; /* Ensures collapse effect works */
+}
+
+.product-desc {
+    color: var(--text-muted);
+    line-height: 1.8;
+    font-size: 1rem;
+    margin-bottom: 0; /* spacing handled by toggle button */
+}
+
+/* Read More / Read Less Toggle */
+#toggle-desc {
+    display: inline-block;
+    margin-top: 8px;
+    color: var(--accent-color);
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+/* Book Meta Section */
+.product-meta {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-color);
+    padding: 1rem;
+    background-color: var(--primary-bg);
+    border-radius: 0.5rem;
+    margin-top: 1.5rem; /* spacing from description */
+}
+
+/* Add to Cart Button */
+.btn-add-cart {
+    background-color: var(--accent-color);
+    color: var(--accent-text);
+    border: none;
+    padding: 12px 30px;
+    font-weight: 700;
+    border-radius: 50px;
+    transition: background 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .btn-add-cart:hover {
+        background-color: var(--accent-hover);
+        color: var(--accent-text);
+    }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .product-img-box {
+        padding: 1rem;
+    }
+
+    .product-title {
+        font-size: 2rem;
+    }
+
+    .product-price {
+        font-size: 1.5rem;
+    }
+}
+
+/* Login Page Theme */
+.login-container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--secondary-bg);
+}
+
+.login-card {
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--primary-bg);
+}
+
+.login-header {
+    background-color: var(--text-main); /* dark header */
+    color: var(--accent-text);
+}
+
+.login-body {
+    padding: 2.5rem 2rem;
+}
+
+/* Input focus */
+.input-group:focus-within .form-control,
+.input-group:focus-within .input-group-text {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+/* Login Button */
+.btn-add-cart {
+    background-color: var(--accent-color);
+    color: var(--accent-text);
+    border: none;
+    padding: 12px 0;
+    font-weight: 700;
+    border-radius: 50px;
+    transition: all 0.3s;
+}
+
+    .btn-add-cart:hover {
+        background-color: var(--accent-hover);
+        color: var(--accent-text);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(78, 115, 223, 0.3);
+    }
+
+/* Register link */
+.register-link {
+    color: var(--text-main);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+    .register-link:hover {
+        color: var(--accent-color);
+        text-decoration: underline;
+    }
+
+/* Back button */
+.btn-outline-primary {
+    border-radius: 50px;
+    padding: 6px 20px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 1rem;
+}
+
+/* =========================================
+   LOGIN PAGE STYLES
+   ========================================= */
+
+/* Centers the card on the screen */
+.login-container {
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 40px;
+}
+
+/* Card Container */
+.login-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); /* Soft, modern shadow */
+    overflow: hidden;
+}
+
+/* Header Section (Blue Background) */
+.login-header {
+    background-color: var(--accent-color); /* Your Theme Blue */
+    color: #ffffff;
+    padding: 30px 20px;
+    text-align: center;
+}
+
+    .login-header i {
+        font-size: 3rem;
+        opacity: 0.9;
+    }
+
+    .login-header h3 {
+        font-weight: 700;
+        margin-top: 10px;
+        font-size: 1.5rem;
+    }
+
+.login-body {
+    padding: 40px 30px;
+}
+
+/* Custom Input Styling for Login */
+.login-card .form-control {
+    background-color: #f8f9fc;
+    border-color: #eaecf4;
+    height: 45px; /* Slightly taller for modern look */
+    padding-left: 15px;
+    font-size: 0.95rem;
+}
+
+    .login-card .form-control:focus {
+        background-color: #fff;
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.15); /* Blue Glow */
+    }
+
+.login-card .form-check-input:checked {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
